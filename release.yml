@@ -1,0 +1,11 @@
+---
+
+- name: Deployment
+  hosts: all
+  roles:
+    - common
+    # - zabbix-agent
+#    - fusioninventory-agent
+#    - docker
+  vars:
+    setup: false

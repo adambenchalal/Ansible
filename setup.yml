@@ -1,0 +1,46 @@
+---
+
+- name: Deployment common roles
+  hosts: all
+  become: yes
+  become_method: sudo
+  roles:
+    - common
+    - zabbix-agent2
+  vars:
+    setup: true
+
+- name: Deployment Zabbix
+  hosts: zabbix-server, template-rocky-9
+  become: yes
+  become_method: sudo
+  roles:
+    - mysql-8
+    - zabbix-server
+  vars:
+    setup: true
+
+- name: Deployment Mautic
+  hosts: template-rocky-8
+  become: yes
+  become_method: sudo
+  roles:
+    - mysql-5.7
+    - mautic
+  vars:
+    setup: true
+
+#############################
+##### EXTRA MODULE LIST #####
+#############################
+
+# apache            | OK           
+# nginx             | IN PROGRESS
+# docker            | OK
+# lets-encrypt      | OK          | variable DOMAIN a rajouter dans le host
+# mautic            | IN PROGRESS
+# mysql-8           | OK
+# mysql-5.7           | OK
+# nginx             | IN PROGRESS
+# php-7.2             | OK
+# zabbix-check-url  | OK          | Choisir le module dans le main.yml

@@ -1,0 +1,209 @@
+[all]
+# exenple ansible_host=x.x.x.x port=22 location=[XCP-NG|COSMOSPACE|TELEMAQUE|EUCLYDE]
+template-centos-6 		            ansible_host=192.168.250.101                                                location=XCP-NG
+template-centos-7 		            ansible_host=192.168.250.94                                                 location=XCP-NG
+template-centos-8 		            ansible_host=192.168.250.111                                                location=XCP-NG
+template-debian-8                   ansible_host=192.168.250.117                                                location=XCP-NG
+template-debian-9 		            ansible_host=192.168.250.119                                                location=XCP-NG
+template-debian-10 		            ansible_host=192.168.250.121                                                location=XCP-NG
+template-debian-11 		            ansible_host=192.168.250.89                                                 location=XCP-NG
+template-rocky-8 		            ansible_host=192.168.250.115                                                location=XCP-NG
+template-rocky-9 		            ansible_host=192.168.250.84                                                 location=XCP-NG
+localhost                           ansible_host=127.0.0.1
+
+4d-db-master-es                     ansible_host=10.100.250.11	    ansible_port=22222                          location=
+4d-db-slave-es                      ansible_host=10.100.250.12	    ansible_port=22222                          location=
+4d-mysql-master-en                  ansible_host=10.100.250.17	    ansible_port=22222                          location=TELEMAQUE
+4d-mysql-slave                      ansible_host=192.168.250.108	ansible_port=22222                          location=
+4d-mysql-slave-en                   ansible_host=192.168.250.33	    ansible_port=22222                          location=
+4d-slave-slave-en                   ansible_host=10.100.250.18	    ansible_port=22222                          location=
+ansible                             ansible_host=192.168.250.99	    ansible_port=22222                          location=
+api-dmp                             ansible_host=192.168.250.87     ansible_port=22222                          location=
+api-market                          ansible_host=10.132.0.33        ansible_port=22                             location=
+b2b                                 ansible_host=192.168.250.153    ansible_port=22222                          location=
+#b2b-a                              ansible_host=192.168.250.3      ansible_port=                               location=COSMOSPACE
+#b2b-b                              ansible_host=192.168.250.7      ansible_port=                               location=
+Backup-4D                           ansible_host=192.168.250.185    ansible_port=22222                          location=
+backup-a                            ansible_host=192.168.250.98     ansible_port=22222                          location=TELEMAQUE
+backup-b                            ansible_host=192.168.250.157    ansible_port=22222                          location=COSMOSPACE
+backup-c                            ansible_host=192.168.250.95     ansible_port=22222                          location=EUCLYDE
+Bastion-ssh                         ansible_host=192.168.250.250    ansible_port=22222                          location=
+buzz-db-a2                          ansible_host=192.168.250.122    ansible_port=22222                          location=TELEMAQUE
+buzz-db-c                           ansible_host=192.168.250.60     ansible_port=22222                          location=TELEMAQUE
+buzz-expert-migration               ansible_host=192.168.250.227    ansible_port=22222                          location=
+callbox-a                           ansible_host=192.168.250.168    ansible_port=22222                          location=COSMOSPACE
+callbox-b                           ansible_host=192.168.250.169    ansible_port=22222                          location=TELEMAQUE
+cassandra                           ansible_host=10.132.0.63        ansible_port=22     ansible_user=ansible    location=
+cloud-key-fr                        ansible_host=192.168.63.248     ansible_port=22222                          location=
+codes-manager                       ansible_host=10.132.0.184       ansible_port=22     ansible_user=ansible    location=
+communication-services-gateway      ansible_host=10.132.0.126       ansible_port=22     ansible_user=ansible    location=
+consent-gw-gc                       ansible_host=10.132.0.115       ansible_port=22     ansible_user=ansible    location=
+cosmostats                          ansible_host=192.168.250.199    ansible_port=22222                          location=TELEMAQUE
+cosmostats-preprod                  ansible_host=192.168.250.127    ansible_port=22222                          location=
+crm-db-a                            ansible_host=192.168.250.170    ansible_port=22222                          location=COSMOSPACE
+crm-db-b                            ansible_host=192.168.250.171    ansible_port=22222                          location=
+crm-gw-a                            ansible_host=192.168.250.172    ansible_port=22222                          location=COSMOSPACE
+crm-gw-b                            ansible_host=192.168.250.173    ansible_port=22222                          location=
+data-reconciliation                 ansible_host=10.132.0.52        ansible_port=22     ansible_user=ansible
+data-reconciliation-mysql           ansible_host=10.132.0.53        ansible_port=22     ansible_user=ansible
+dev-buzz-expert                     ansible_host=192.168.250.228    ansible_port=22222                          location=
+dmp-api-v2                          ansible_host=10.132.15.248      ansible_port=22     ansible_user=ansible
+dmp-content-management-1            ansible_host=10.132.0.112       ansible_port=22     ansible_user=ansible
+dmp-content-management-2            ansible_host=10.132.0.113       ansible_port=22     ansible_user=ansible
+dmp-content-management-3            ansible_host=192.168.250.124    ansible_port=22222                          location=
+dmp-content-management-4            ansible_host=192.168.250.125    ansible_port=22222                          location=
+dmp-content-management-arb          ansible_host=10.132.0.114       ansible_port=22     ansible_user=ansible
+dmp-selection-builder-server        ansible_host=192.168.250.63     ansible_port=22222                          location=
+docker                              ansible_host=192.168.250.113    ansible_port=22222                          location=TELEMAQUE
+dqe                                 ansible_host=10.132.0.15        ansible_port=22     ansible_user=ansible
+email-tools                         ansible_host=10.132.0.106       ansible_port=22                             location=
+emails-tools-mongo                  ansible_host=192.168.250.109    ansible_port=22222                          location=
+ems-a                               ansible_host=192.168.250.93     ansible_port=22222                          location=
+ems-db-master-a                     ansible_host=192.168.250.106    ansible_port=22222                          location=
+Ems-db-slave                        ansible_host=192.168.250.92     ansible_port=22222                          location=
+events                              ansible_host=192.168.250.140    ansible_port=22222                          location=
+front-rgpd                          ansible_host=10.132.0.34        ansible_port=22                             location=
+front-tlmq                          ansible_host=10.132.0.4         ansible_port=22     ansible_user=ansible
+gdt                                 ansible_host=10.132.0.107       ansible_port=22     ansible_user=ansible
+gie-egp                             ansible_host=192.168.250.18     ansible_port=22222  location=TELEMAQUE
+gie-egp.telemaque.fr                ansible_host=192.168.250.13     ansible_port=22222                          location=
+Gitlab                              ansible_host=192.168.250.116    ansible_port=22222                          location=
+glpi                                ansible_host=192.168.250.53     ansible_port=22222                          location=
+glpi-9                              ansible_host=192.168.250.220    ansible_port=22222                          location=
+#GrayLog                            ansible_host=10.132.0.202       ansible_port=                               location=
+hal                                 ansible_host=192.168.250.2      ansible_port=22222                          location=
+#hal-a-giga.telemaque.fr            ansible_host=192.168.250.32     ansible_port=                               location=
+hal-b                              ansible_host=192.168.250.23     ansible_port=22222                           location=EUCLYDE
+hal-c-giga.telemaque.fr             ansible_host=192.168.250.30     ansible_port=22222                          location=TELEMAQUE
+hal-d                               ansible_host=192.168.250.138    ansible_port=22222                          location=
+internet-a                          ansible_host=192.168.250.28     ansible_port=22222                          location=
+internet-a-migration                ansible_host=192.168.250.80     ansible_port=22222                          location=TELEMAQUE
+internet-c                          ansible_host=192.168.250.103    ansible_port=22222                          location=TELEMAQUE
+internet-db-a                       ansible_host=192.168.250.43     ansible_port=22222                          location=TELEMAQUE
+internet-db-b                       ansible_host=192.168.250.41     ansible_port=22222                          location=COSMOSPACE
+internet-m.telemaque.fr             ansible_host=192.168.250.42     ansible_port=22222                          location=TELEMAQUE
+intranet                            ansible_host=10.132.0.28        ansible_port=22     ansible_user=ansible
+inventory                           ansible_host=192.168.250.222    ansible_port=22222
+Inxmail-a                           ansible_host=192.168.250.24     ansible_port=22222
+jenkins-workers                     ansible_host=192.168.250.47     ansible_port=22222
+jenkins-CLOUD                       ansible_host=10.132.0.30        ansible_port=22     ansible_user=ansible
+kong-a                              ansible_host=10.132.15.199      ansible_port=22     ansible_user=ansible
+mailer-a.telemaque.fr               ansible_host=192.168.250.90     ansible_port=22222                          location=EUCLYDE
+mailer-admin.telemaque.fr           ansible_host=192.168.250.91     ansible_port=22222
+mautic-customer-en                  ansible_host=10.132.0.69        ansible_port=22     ansible_user=ansible
+mautic-en-draw-tarot                ansible_host=10.132.0.181       ansible_port=22     ansible_user=ansible
+mautic-es                          ansible_host=192.168.250.64     ansible_port=22222
+mautic-fr-customer                  ansible_host=10.132.0.98        ansible_port=22     ansible_user=ansible
+mautic-fr-mailing-astro             ansible_host=10.132.0.120       ansible_port=22     ansible_user=ansible
+metabase-stats                      ansible_host=192.168.250.6      ansible_port=22222
+mobile-gw-a.telemaque.fr            ansible_host=192.168.250.55     ansible_port=22222
+mobile-gw-b.telemaque.fr            ansible_host=192.168.250.56     ansible_port=22222
+mongo-dmp-main-1                    ansible_host=192.168.250.147    ansible_port=22222                          location=TELEMAQUE
+mongo-dmp-main-2                    ansible_host=192.168.250.148    ansible_port=22222                          location=TELEMAQUE
+mongo-dmp-main-3                    ansible_host=192.168.250.149    ansible_port=22222
+mongo-dmp-main-4                    ansible_host=192.168.250.150    ansible_port=22222
+#mongo-dmp-supplied-products-3      ansible_host=192.168.250.247    ansible_port=
+mongo-dmp-supplied-products-4       ansible_host=192.168.250.248    ansible_port=22222
+mongo-stats-prod                    ansible_host=10.132.0.182       ansible_port=22     ansible_user=ansible
+mongodb-dmp-preprod-arbiter-0       ansible_host=10.132.15.251      ansible_port=22
+mongodb-dmp-preprod-node-0          ansible_host=10.132.15.250      ansible_port=22
+mongodb-dmp-preprod-node-1          ansible_host=10.132.15.253      ansible_port=22
+mongodb-dmp-preprod-node-2          ansible_host=10.132.15.252      ansible_port=22
+mongodb-preprod-01                  ansible_host=192.168.250.71     ansible_port=22222
+mongodb-preprod-02                  ansible_host=192.168.250.72     ansible_port=22222
+mongodb-preprod-arbiter             ansible_host=192.168.250.139    ansible_port=22222
+mongodb-resource-validator-vm       ansible_host=10.132.0.72        ansible_port=22
+mongodb-shared-tlmq-01              ansible_host=192.168.250.36     ansible_port=22222
+mongodb-shared-tlmq-02              ansible_host=192.168.250.38     ansible_port=22222
+mongodb-shared-tlmq-03              ansible_host=192.168.250.39     ansible_port=22222
+mongodb-shared-tlmq-04              ansible_host=192.168.250.40     ansible_port=22222
+mongodb-shared-tlmq-arbiter         ansible_host=192.168.250.35     ansible_port=22222
+monitor                            ansible_host=192.168.250.70     ansible_port=22222
+mysql-4d-slave-fr-gc                ansible_host=10.132.0.16        ansible_port=22
+nfs-persistent-volumes              ansible_host=10.132.0.73        ansible_port=22     ansible_user=ansible
+ns1                                 ansible_host=192.168.250.133    ansible_port=22222
+partners.tlmq.fr                    ansible_host=10.132.0.9         ansible_port=22     
+poney                               ansible_host=192.168.250.131    ansible_port=22222                          location=TELEMAQUE
+pont-ssh-gcloud                     ansible_host=10.132.15.208      ansible_port=22     ansible_user=ansible
+preprod                             ansible_host=192.168.250.110    ansible_port=22222  
+preprodbuzz                         ansible_host=192.168.250.132    ansible_port=22222  
+private-api-a                       ansible_host=10.132.0.207       ansible_port=22     ansible_user=ansible
+private-api-b                       ansible_host=10.132.0.208       ansible_port=22     ansible_user=ansible
+proxy-internet-gcloud               ansible_host=10.132.0.67        ansible_port=22     ansible_user=ansible
+public-api-a                        ansible_host=10.132.15.209      ansible_port=22     ansible_user=ansible
+public-api-b                        ansible_host=10.132.15.210      ansible_port=22     ansible_user=ansible
+rabbitmq-cluster-events-node-0      ansible_host=10.132.0.190       ansible_port=22     ansible_user=ansible
+rabbitmq-cluster-events-node-1      ansible_host=10.132.15.205      ansible_port=22     ansible_user=ansible
+rabbitmq-cluster-events-node-2      ansible_host=10.132.15.204      ansible_port=22     ansible_user=ansible
+rabbitmq-cluster-events-node-3     ansible_host=10.132.0.191       ansible_port=22      ansible_user=ansible
+rabbitmq-cluster-events-preprod-node-0    ansible_host=10.132.0.221 ansible_port=22     ansible_user=ansible
+rabbitmq-cluster-events-preprod-node-1    ansible_host=10.132.0.222 ansible_port=22     ansible_user=ansible
+rabbitmq-cluster-events-preprod-node-2    ansible_host=10.132.0.223 ansible_port=22     ansible_user=ansible
+rabbitmq-qg                         ansible_host=10.132.0.40        ansible_port=22     ansible_user=ansible
+rabbitmq-telco-events               ansible_host=10.132.0.183       ansible_port=22     ansible_user=ansible
+rbmq-dmp-replication-1              ansible_host=192.168.250.144    ansible_port=22222
+rbmq-dmp-replication-2              ansible_host=192.168.250.145    ansible_port=22222  
+rbmq-dmp-replication-3              ansible_host=192.168.250.146    ansible_port=22222
+samba-cams                          ansible_host=192.168.250.118    ansible_port=22222
+sender-es                           ansible_host=10.100.250.10      ansible_port=22222
+sgbd-3                              ansible_host=10.132.0.16        ansible_port=22     ansible_user=ansible
+sgbd2                              ansible_host=192.168.250.74     ansible_port=22222
+smtp-spare                          ansible_host=192.168.250.130    ansible_port=22222
+smtp.telemaque.fr                   ansible_host=192.168.250.102    ansible_port=22222
+spg-brain-dev                       ansible_host=192.168.250.152    ansible_port=22222
+spg-public                          ansible_host=192.168.250.11     ansible_port=22222
+StarGate                            ansible_host=192.168.250.100    ansible_port=22222
+stargate-esp                        ansible_host=10.100.0.1         ansible_port=22222
+stargate-esp-spare                  ansible_host=10.100.0.2         ansible_port=22222
+stars-flash                         ansible_host=10.132.0.43        ansible_port=22
+stats                               ansible_host=192.168.250.107    ansible_port=22222
+Storage-New                         ansible_host=192.168.250.225    ansible_port=22222
+swarm-tools-manager-1               ansible_host=10.132.0.173       ansible_port=22     ansible_user=ansible
+swarm-tools-manager-2               ansible_host=10.132.0.174       ansible_port=22     ansible_user=ansible
+swarm-tools-manager-3               ansible_host=10.132.0.175       ansible_port=22     ansible_user=ansible
+swarm-tools-worker-1                ansible_host=10.132.0.176       ansible_port=22     ansible_user=ansible
+swarm-tools-worker-2                ansible_host=10.132.0.177       ansible_port=22     ansible_user=ansible
+swarm-tools-worker-3                ansible_host=10.132.0.178       ansible_port=22     ansible_user=ansible
+taxes-engine-gw                     ansible_host=10.132.0.66        ansible_port=22
+telco-prod-storage                  ansible_host=192.168.245.220    ansible_port=22                             location=TELEMAQUE
+tools-local                         ansible_host=192.168.250.182    ansible_port=22222                          location=TELEMAQUE
+vb-cosmo-host                       ansible_host=192.168.250.65     ansible_port=22222
+vb-cosmo2-host                      ansible_host=192.168.250.96     ansible_port=22222
+vb-dev                              ansible_host=192.168.250.67     ansible_port=22222
+vb-stats                            ansible_host=192.168.250.97     ansible_port=22222
+vmps-a                              ansible_host=192.168.250.85     ansible_port=22222
+vmps-b                              ansible_host=192.168.250.86     ansible_port=22222
+voip-db-c                           ansible_host=192.168.250.200    ansible_port=22222
+voip-dev-galera-1                   ansible_host=192.168.250.141    ansible_port=22222
+web-cosmo-2                         ansible_host=192.168.250.175    ansible_port=22222                          location=TELEMAQUE
+web.cosmospace.com                  ansible_host=192.168.250.27     ansible_port=22222                          location=TELEMAQUE
+xcp-ng-1                            ansible_host=192.168.62.2       ansible_port=22 
+xcp-ng-2                            ansible_host=192.168.62.3       ansible_port=22
+xcp-ng-3-CR                         ansible_host=192.168.62.4       ansible_port=22
+xcp-ng-4                            ansible_host=192.168.62.5       ansible_port=22
+xcp-ng-5                            ansible_host=192.168.62.6       ansible_port=22
+xcp-ng-6                            ansible_host=192.168.62.15      ansible_port=22 
+xcp-ng-7                            ansible_host=192.168.250.192    ansible_port=22
+xcp-ng-mongodb-preprod-01           ansible_host=192.168.62.7       ansible_port=22                             location=TELEMAQUE
+xcp-ng-mongodb-preprod-02           ansible_host=192.168.62.8       ansible_port=22                             location=TELEMAQUE
+xcp-ng-mongodb-shared-tlmq-01       ansible_host=192.168.62.9       ansible_port=22
+xcp-ng-mongodb-shared-tlmq-02       ansible_host=192.168.62.10      ansible_port=22
+xcp-ng-mongodb-shared-tlmq-03       ansible_host=192.168.62.11      ansible_port=22
+xcp-ng-mongodb-shared-tlmq-04       ansible_host=192.168.62.12      ansible_port=22
+xcp-ng-tech                         ansible_host=192.168.62.13      ansible_port=22
+xcp-ng-telco-primary                ansible_host=192.168.62.17      ansible_port=22                             location=TELEMAQUE
+xcp-ng-telco-secondary              ansible_host=192.168.62.18      ansible_port=22                             location=COSMOSPACE
+xcp-ng-telco-storage                ansible_host=192.168.62.19      ansible_port=22                             location=TELEMAQUE
+xms-1                               ansible_host=192.168.250.75     ansible_port=22222
+Xms-db-a                            ansible_host=192.168.250.22     ansible_port=22222  
+Xms-db-b                            ansible_host=192.168.250.9      ansible_port=22222
+xms-gw-a                            ansible_host=192.168.250.1      ansible_port=22222                          location=TELEMAQUE
+xms-gw-b                            ansible_host=192.168.250.4      ansible_port=22222                          location=TELEMAQUE
+xms-gw-c                            ansible_host=192.168.250.79     ansible_port=22222                          location=TELEMAQUE
+xms-oper-gw                         ansible_host=10.132.0.55        ansible_port=22     ansible_user=ansible
+xo-xcp-ng                           ansible_host=192.168.250.50     ansible_port=22222
+xo-xcp-ng-esp                       ansible_host=10.100.250.51      ansible_port=22222  ansible_user=ansible
+xoa-MAOUS                           ansible_host=192.168.250.207    ansible_port=22222  ansible_user=ansible
+zabbix-6                            ansible_host=192.168.250.180    ansible_port=22222                          location=XENSERVER
+Zabbix-5                            ansible_host=192.168.250.88     ansible_port=22222                          location=XENSERVER
+zabbix-ansible                      ansible_host=192.168.250.205    ansible_port=22                             location=XENSERVER
