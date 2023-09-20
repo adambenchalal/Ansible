@@ -1,0 +1,65 @@
+---
+
+- name: Set default mysql id configuration file path
+  set_fact:
+    MYSQL_USER: "root"
+    MYSQL_PASSWORD: "{{ lookup('ansible.builtin.password', '/tmp/passwordfile length=16') }}"
+    MYSQL_HOST: "127.0.0.1"
+  when: setup is defined
+
+- name: Install package with multiple repos disabled
+  shell: dnf module disable mysql -y
+  when: (ansible_distribution == "Rocky" and ansible_distribution_major_version == "8")
+  ignore_errors: true
+
+- name: Add EL7 based MySQL Repository
+  template: src=mysql-5.7-repo.j2 dest=/etc/yum.repos.d/mysql-community.repo mode=0644 owner=root group=root
+   
+
+- name: Then enable channel for MySQL 5.7
+  shell: dnf config-manager --enable mysql57-community
+  when: (ansible_distribution == "Rocky" and ansible_distribution_major_version == "8")
+  ignore_errors: true
+
+- name: Install MySQL 5.7 on CentOS 8 / RHEL 8 
+  dnf: 
+    state: present
+    update_cache: true
+    name: 
+      - mysql-community-server
+      - python3-PyMySQL
+      - mytop
+  when: (ansible_distribution == "Rocky" and ansible_distribution_major_version == "8")
+
+
+- name: start and enable MySQL service
+  service:
+    name: mysqld
+    state: started
+    enabled: yes
+
+- name: Get temporary MySQL root password
+  shell: grep 'temporary password' /var/log/mysqld.log | awk '{print $NF}'
+  register: mysql_root_temp_password
+
+
+- name: Set the MySQL root password
+  shell: mysqladmin -u root --password="{{ mysql_root_temp_password.stdout }}" password "{{ MYSQL_PASSWORD }}"
+  register: mysql_admin_root_password_result
+  failed_when: "'(using password: NO)' in mysql_admin_root_password_result.stderr"
+
+
+- name: 5 second pause for MySQL starting
+  pause:
+    seconds: 5
+
+- name: Add .my.cnf file 
+  template: src=my.cnf.j2 dest=/root/.my.cnf mode=0600 owner=root group=root
+
+- name: Add .mytop file 
+  template: src=mytop.j2 dest=/root/.mytop mode=0600 owner=root group=root
+
+
+
+
+

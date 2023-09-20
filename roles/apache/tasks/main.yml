@@ -1,0 +1,60 @@
+---
+
+- name: Set apache service name
+  set_fact:
+    apache: "httpd"
+  when: ansible_os_family == "RedHat"
+
+
+- name: Set zabbix configuration file path
+  set_fact:
+    apache: "apache2"
+  when: ansible_os_family == "Debian"
+
+
+- name: Set iptables configuration file path
+  set_fact:
+    path_iptables_config: "/etc/sysconfig/iptables"
+  when: ansible_os_family == "RedHat"
+
+
+- name: Set iptables configuration file path
+  set_fact:
+    path_iptables_config: "/etc/iptables/rules.v4"
+  when: ansible_distribution =="Debian"
+
+
+- name: Installion apache package 
+  package: 
+    state: present
+    update_cache: true
+    name: "{{apache}}"
+
+
+- name: Enable service zabbix-agent
+  service:
+    name: "{{apache}}"
+    enabled: yes
+
+
+- name: Restart service zabbix-agent 
+  service:
+    name: "{{apache}}"
+    state: restarted
+  when: setup is defined
+
+
+- name: Ansible Insert rules zabbix-agent in iptables
+  blockinfile:
+    path: "{{ path_iptables_config }}"
+    block: |
+      -A INPUT -p tcp --dport {{apache.port_80}} -m conntrack --ctstate NEW,ESTABLISHED -j ACCEPT
+      -A INPUT -p tcp --dport {{apache.port_443}} -m conntrack --ctstate NEW,ESTABLISHED -j ACCEPT
+    insertbefore: COMMIT
+
+
+- name: restart iptables
+  service:
+    name: iptables
+    state: restarted
+  when: setup is defined

@@ -1,0 +1,31 @@
+:INPUT ACCEPT [0:0]
+:OUTPUT ACCEPT [0:0]
+:FORWARD ACCEPT [0:0]
+-A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
+-A INPUT -p icmp -j ACCEPT
+-A INPUT -i lo -j ACCEPT
+#######################################  SSH  ###############################################
+
+# hassen ouni pc
+-A INPUT -p tcp --dport 22 -s 192.168.0.90 -d   {{ ansible_default_ipv4.address }} -j ACCEPT
+# ansible v2
+-A INPUT -p tcp --dport 22 -s 192.168.250.83 -d {{ ansible_default_ipv4.address }} -j ACCEPT
+# hassen ouni pc
+-A INPUT -p tcp --dport 22 -s 192.168.0.90 -d   {{ ansible_default_ipv4.address }} -j ACCEPT
+# pc_sserveur_bat_e
+-A INPUT -p tcp --dport 22 -s 192.168.0.106 -d  {{ ansible_default_ipv4.address }} -j ACCEPT
+# pc_sserveur_bat_a  
+-A INPUT -p tcp --dport 22 -s 192.168.0.108 -d  {{ ansible_default_ipv4.address }} -j ACCEPT
+# franck leroy pc
+-A INPUT -p tcp --dport 22 -s 192.168.0.151 -d  {{ ansible_default_ipv4.address }} -j ACCEPT
+#adam benchalal pc
+-A INPUT -p tcp --dport 22 -s 192.168.0.171 -d  {{ ansible_default_ipv4.address }} -j ACCEPT
+###########################################################################################
+
+# ZABBIX for vlan5
+-A INPUT -p tcp -m tcp -m multiport -s 192.168.0.0/16 -j ACCEPT --dports 10050
+#  Block timestamp icmp resquest
+-A INPUT -p icmp --icmp-type timestamp-request -j DROP
+-A FORWARD -j REJECT --reject-with icmp-host-prohibited
+-A INPUT -j REJECT --reject-with icmp-host-prohibited
+COMMIT

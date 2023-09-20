@@ -1,0 +1,45 @@
+---
+
+- name: Set usernames
+  set_fact:
+    users:
+      - username: a.benchalal
+      - username: alex
+      - username: bastion-ssh
+      - username: f.leroy
+      - username: h.ouni
+
+- name: Set up multiple authorized keys taken from file
+  authorized_key:
+    user: root
+    state: present
+    key: "{{ lookup('file' , 'files/ssh_keys.pub') }}"
+    path: '/root/.ssh/authorized_keys'
+
+- name: Add group telemaque_sudoers
+  group:
+    name: "telemaque_sudoers"
+    state: present
+
+- name: Creating file telemaque_sudoers
+  copy:
+    dest: "/etc/sudoers.d/telemaque_sudoers"
+    content: |
+      %telemaque_sudoers ALL=(ALL:ALL) NOPASSWD:ALL
+
+- name: Create user and add to telemaque_sudoers group
+  user: 
+    name: "{{ item.username }}" 
+    group: "telemaque_sudoers"
+  with_items: "{{ users }}"
+
+- name: Creating authorized_keys for all users
+  authorized_key: user="{{item.username}}" key="{{ lookup('file', 'files/ssh-keys/authorized_keys.{{ item.username }}.pub')}}"
+  with_items: "{{ users }}"
+
+- name: Set permission 700 to /root/.ssh
+  file:
+    path: /root/.ssh
+    mode: 0700
+
+

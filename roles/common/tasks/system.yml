@@ -1,0 +1,57 @@
+---
+
+- name: Generate resolv.conf file for setting DNS 
+  template:
+    src: "resolv.conf.j2"
+    dest: "/etc/resolv.conf"
+    mode: 0644
+
+- name: Set timezone to {{ timezone }}
+  timezone:
+    name: "{{ timezone }}"
+
+- name: Generate ntp configuration file
+  template:
+    src: "ntp.conf.j2"
+    dest: "/etc/ntp.conf"
+    mode: 0644
+
+- name: Generate chrony configuration file
+  template:
+    src: "chrony.j2"
+    dest: "/etc/chrony.conf"
+    mode: 0644
+
+- name: Set location in file /etc/location
+  copy:
+    dest: "/etc/location"
+    content: |
+      {{ location }}
+
+############################ SECURISATION SSH ##################################
+- name: Check if PasswordAuthentication yes is already defined
+  lineinfile:
+    state: absent
+    path: /etc/ssh/sshd_config
+    regexp: "^PasswordAuthentication yes"
+  check_mode: true
+  changed_when: false 
+  register: check
+
+- name: Define PasswordAuthentication no if undefined
+  lineinfile:
+    state: present
+    path: /etc/ssh/sshd_config
+    line: "PasswordAuthentication no"
+  when: check.found == 0
+
+- name: Enable/Restart iptables
+  service:
+    state: restarted
+    name: sshd
+
+- name: Enable/Restart iptables
+  service:
+    state: restarted
+    enabled: yes
+    name: sshd

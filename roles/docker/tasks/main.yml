@@ -1,0 +1,63 @@
+---
+
+- name: Set docker-compose for a os system
+  set_fact:
+    docker_compose: "docker-compose"
+  when: ansible_os_family == "Debian" or ansible_distribution == "CentOS"
+
+
+- name: Add repository into repo.d list
+  yum_repository:
+    name: docker
+    description: docker repository
+    baseurl: "https://download.docker.com/linux/centos/$releasever/$basearch/stable"
+    enabled: true
+    gpgcheck: true
+    gpgkey: "https://download.docker.com/linux/centos/gpg"
+  when: ansible_os_family == "RedHat"
+
+
+
+
+#Party Debian 
+
+
+- name: Add signing key
+  apt_key:
+    url: https://download.docker.com/linux/debian/gpg
+    state: present
+  when: ansible_distribution == "Debian"
+
+
+- name: Add repository into sources list
+  apt_repository:
+     repo: "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian bullseye stable"
+     state: present
+     filename: docker
+  when: ansible_distribution == "Debian"
+
+
+- name: Installion docker 
+  package: 
+    state: present
+    update_cache: yes
+    name:
+      - docker
+      - docker-ce 
+      - docker-ce-cli
+      - containerd.io 
+      - "{{docker_compose}}"
+  #when: ansible_distribution == "Debian"
+
+
+- name: Enable service docker
+  service:
+    name: docker
+    enabled: yes
+
+
+- name: Restart service docker
+  service:
+    name: docker
+    state: restarted
+  when: setup is defined

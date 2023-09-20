@@ -1,0 +1,175 @@
+---
+
+- name: Update all packages for redhat
+  yum:
+    name: "*"
+    state: latest
+    update_cache: yes
+
+- name: stop firewalld
+  systemd:
+    state: stopped
+    name: firewalld
+    enabled: no
+  ignore_errors: true
+  when: ansible_distribution_major_version >= "7"
+
+- name: Remove firewalld
+  yum:
+    name:
+      - firewalld
+    state: absent
+  ignore_errors: true
+  when: ansible_distribution_major_version >= "7"
+
+- name: Installation packages for Redhat
+  yum:
+    name: '{{ item }}'
+    state: present
+  with_items:
+    - curl
+    - chrony
+    - device-mapper-persistent-data
+    - emacs-nox
+    - epel-release
+    - git
+    - iptables-services
+    - lvm2
+    - mlocate
+    - net-tools
+    - tcpdump
+    - wget
+    - telnet
+    - tmux
+    - tar
+    - yum-utils
+    - htop
+    - mtr
+    - vim
+    - dmidecode
+    - xe-guest-utilities-latest
+    - unzip
+  ignore_errors: true
+
+
+- name: Enable/Restart iptables
+  systemd:
+    state: started
+    name: iptables
+    enabled: yes
+  ignore_errors: true
+
+############### SET INVENTORY BASH SCRIPT ##########################
+
+
+- name: Insert content of zabbix-conf template
+  template:
+    src: inventory.bash.j2
+    dest: /root/inventory.bash
+
+- name: set the permissions to inventory.bash file
+  file:
+    path: /inventory.bash
+    state: touch
+    mode: 600
+
+- name:  set the permissions to location file
+  file:
+    path: /location
+    state: touch
+
+
+########### AUTOMATIC UPDATE DNF ####################################
+
+- name: Set speficic variables for CentOs 7
+  set_fact:
+    automatic_update_package_name: yum-cron
+    path_automatic_update_config: "/etc/yum/yum-cron.conf"
+    automatic_update_service: "yum-cron"
+  when: ansible_facts['distribution_major_version'] == "7"
+
+- name: Set speficic variables for CentOs 8
+  set_fact:
+    automatic_update_package_name: dnf-automatic 
+    path_automatic_update_config: "/etc/dnf/automatic.conf"
+    automatic_update_service: "dnf-automatic.timer" 
+  when: ansible_facts['distribution_major_version'] >= "8"
+
+- name: Installation automatic update package RedHat
+  yum:
+    name: "{{ automatic_update_package_name }}"
+    state: present
+    validate_certs: no
+
+- name: Configuration automatic update package
+  replace:
+    path: "{{ path_automatic_update_config }}"
+    regexp: '^[\s]*{{ item.From }}\s*=.*$'
+    replace: '{{ item.To }}'
+  with_items:
+    - { From: "apply_updates ", To: "apply_updates = yes"}
+    - { From: "email_to ", To: "email_to = adminsys@telemaque.fr"}
+
+
+################################ SETTING SMTP ######################################
+
+- name: replace conf yum-cron
+  replace:
+    path: "{{ path_automatic_update_config }}"
+    regexp: '^[\s]*{{ item.From }}\s*=.*$'
+    replace: '{{ item.To }}'
+  with_items:
+    - { From: "email_host ", To: "email_host = {{ smtp.server }}"}
+    - { From: "emit_via ", To: "emit_via = email"}
+  when: ansible_distribution_major_version == "7"
+
+- name: replace smtp in conf dnf-automatic
+  replace:
+    path: "{{ path_automatic_update_config }}"
+    regexp: '^[\s]*{{ item.From }}\s*=.*$'
+    replace: '{{ item.To }}'
+  with_items:
+    - { From: "email_host ", To: "email_host = {{ smtp.server }}"}
+    - { From: "email_from", To: "{{ ansible_hostname }}@{{ domain }}"}
+  when: ansible_distribution_major_version >= "8"
+
+###################################################################################
+
+- name: Enable/Restart automatic-update service
+  service:
+    name: "{{ automatic_update_service }}"
+    state: restarted
+    enabled: yes
+
+######################### NTPDATE  #############################################
+- name: Configuration ntpdate on Centos 7
+  blockinfile:
+    path: /etc/crontab
+    block: |
+        30 5 * * * root /usr/sbin/ntpdate >/dev/null 2>&1
+    state: present 
+  when: ansible_distribution_major_version == "7"
+
+######################## INSERT ROUTE EXAMPLE ################################
+
+- name: Creating a file with content for route-example
+  copy:
+    dest: "/etc/sysconfig/network-scripts/route-example"
+    content: |
+      #192.168.x.x/32 via 192.168.x.x dev XXX
+
+################# DISABLE SELINUX ###############################
+- name: Disable selinux
+  selinux:
+    state: disabled
+
+###############  XCP-NG VM TOOLS ############################
+
+- name: Enable/Restart automatic-update service
+  service:
+    name: "xe-linux-distribution"
+    state: started
+    enabled: yes
+  ignore_errors: true
+  
+

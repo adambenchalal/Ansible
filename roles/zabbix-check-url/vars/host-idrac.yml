@@ -1,0 +1,168 @@
+zabbix_host_idrac:
+  - hostname: iDrac-voip-db-a
+    ip: 192.168.30.12
+  - hostname: iDrac-Hal
+    ip: 192.168.30.14
+  - hostname: iDrac-SMTP
+    ip: 192.168.30.15
+  - hostname: iDrac-4d-us-win
+    ip: 192.168.30.16
+  - hostname: iDrac-4d-sql-fr
+    ip: 192.168.30.17
+  - hostname: iDrac-xenserver-std-esp-2
+    ip: 192.168.30.18
+  - hostname: iDrac-callbox-a
+    ip: 192.168.30.19
+  - hostname: iDrac-callbox-b
+    ip: 192.168.30.20
+  - hostname: iDrac-inxmail-a
+    ip: 192.168.30.21
+  - hostname: iDrac-crm-gw-b
+    ip: 192.168.30.22
+  - hostname: iDrac-ast-b
+    ip: 192.168.30.23
+  - hostname: iDrac-Internet-M
+    ip: 192.168.30.24
+  - hostname: rsa-internet-a HS
+    ip: 192.168.30.25
+  - hostname: rsa-xms-gw-a
+    ip: 192.168.30.26
+  - hostname: rsa-xms-gw-b
+    ip: 192.168.30.27
+  - hostname: iDrac-secure-a-migr-102021
+    ip: 192.168.30.28
+  - hostname: iDrac-xcp-ng-mongodb-preprod-01
+    ip: 192.168.30.29
+  - hostname: rsa-xms-db-c
+    ip: 192.168.30.30
+  - hostname: iDrac-4D-SMS
+    ip: 192.168.30.31
+  - hostname: iDrac-hal-b
+    ip: 192.168.30.32
+  - hostname: iDrac-4D-questuite
+    ip: 192.168.30.33
+  - hostname: iDrac-sgbd1
+    ip: 192.168.30.34
+  - hostname: iDrac-sgbd2
+    ip: 192.168.30.35
+  - hostname: iDrac-docker
+    ip: 192.168.30.36
+  - hostname: iDrac-freeswitch-a
+    ip: 192.168.30.37
+  - hostname: iDrac7-4D-NEW-R620
+    ip: 192.168.30.38
+  - hostname: iDrac-voip-freeswitch-b
+    ip: 192.168.30.40
+  - hostname: iDrac-voip-san-a
+    ip: 192.168.30.41
+  - hostname: iDrac-voip-san-B
+    ip: 192.168.30.42
+  - hostname: iDrac-cosmostats
+    ip: 192.168.30.43
+  - hostname: iDrac-4D-PROSPECT-FACTURATION 11.6
+    ip: 192.168.30.44
+  - hostname: iDrac-voip-db-b-fr
+    ip: 192.168.30.45
+  - hostname: iDrac-machine-a-identifier
+    ip: 192.168.30.46
+  - hostname: iDrac-xcp-ng-1
+    ip: 192.168.30.47
+  - hostname: iDrac-xcp-ng-2
+    ip: 192.168.30.48
+  - hostname: iDrac-nfs-xen-1
+    ip: 192.168.30.49
+  - hostname: iDrac-monitor-new
+    ip: 192.168.30.50
+  - hostname: iDrac-cosmo-dev-acheckbadpasswd
+    ip: 192.168.30.51
+  - hostname: iDrac-buzz-db-a2
+    ip: 192.168.30.52
+  - hostname: iDrac-smtp-spare
+    ip: 192.168.30.53
+  - hostname: iDrac-xcp-ng-3
+    ip: 192.168.30.54
+  - hostname: iDrac-XenServeur-P2V
+    ip: 192.168.30.55
+  - hostname: iDrac-xcp-ng-voip-dr
+    ip: 192.168.30.56
+  - hostname: iDrac-test-4d-euclide
+    ip: 192.168.30.57
+  - hostname: RSA-xms-dev
+    ip: 192.168.30.58
+  - hostname: iDrac-voip-nas-a-us
+    ip: 192.168.30.59
+  - hostname: iDrac-voip-nas-b-us-acheckerrepondpas
+    ip: 192.168.30.60
+  - hostname: iDrac-telco-primary
+    ip: 192.168.30.61
+  - hostname: iDrac-samba-cams-acheckerrepondpas
+    ip: 192.168.30.62
+  - hostname: iDrac-serveur-cams-axis5-cosmo
+    ip: 192.168.30.63
+  - hostname: iDrac-web-es-rescue
+    ip: 192.168.30.64
+  - hostname: iDrac-xcp-ng-4
+    ip: 192.168.30.65
+  - hostname: iDrac-telco-secondary
+    ip: 192.168.30.66
+  - hostname: iDrac-telco-storage
+    ip: 192.168.30.67
+  - hostname: iDrac-internet-a-migration-02032020
+    ip: 192.168.30.80
+  - hostname: iDrac-backup-c
+    ip: 192.168.30.95
+  - hostname: iDrac-data-reconciliation HS peut pas mettre sur carte rsx idrac
+    ip: 192.168.30.107
+  - hostname: iDrac-test-bookstack
+    ip: 192.168.30.119
+  - hostname: iDrac-mongo-dmp-main-1
+    ip: 192.168.30.147
+  - hostname: iDrac-mongo-dmp-main-2
+    ip: 192.168.30.148
+  - hostname: iDrac-mongo-dmp-main-3
+    ip: 192.168.30.149
+  - hostname: iDrac-mongo-dmp-main-4
+    ip: 192.168.30.150
+  - hostname: iDrac-backup-ib
+    ip: 192.168.30.157
+  - hostname: iDrac-xms-db-a2
+    ip: 192.168.30.160
+  - hostname: iDrac-xms-db-b2
+    ip: 192.168.30.161
+  - hostname: iDrac-crm-gw-a
+    ip: 192.168.30.172
+  - hostname: iDrac-4d-facturation
+    ip: 192.168.30.179
+  - hostname: iDrac-backup-d
+    ip: 192.168.30.184
+  - hostname: iDrac-backup-4d
+    ip: 192.168.30.185
+  - hostname: iDrac-voip-db-dump
+    ip: 192.168.30.200
+  - hostname: iDrac-mongo-shared-tlmq
+    ip: 192.168.30.202
+  - hostname: iDrac-xcp-ng-tech
+    ip: 192.168.30.206
+  - hostname: iDrac-xcp-ng-mongodb-shared-tlmq-01
+    ip: 192.168.30.207
+  - hostname: iDrac-xcp-ng-mongodb-shared-tlmq-02
+    ip: 192.168.30.208
+  - hostname: iDrac-xcp-ng-mongodb-shared-tlmq-03
+    ip: 192.168.30.209
+  - hostname: iDrac-xcp-ng-mongodb-shared-tlmq-04
+    ip: 192.168.30.210
+  - hostname: iDrac-xcp-ng-5
+    ip: 192.168.30.218
+  - hostname: iDrac-xcp-ng-6
+    ip: 192.168.30.219
+  - hostname: iDrac-4d-prod-fr-2
+    ip: 192.168.30.239
+  - hostname: iDrac-xenserver-std-esp-1
+    ip: 192.168.30.240
+  - hostname: iDrac-4d-dev _ 11.1 en ce moment
+    ip: 192.168.30.241
+  - hostname: iDrac-4d-fr-spare _ 11.7
+    ip: 192.168.30.242
+  - hostname: iDrac-internet-c-migr
+    ip: 192.168.30.243
+

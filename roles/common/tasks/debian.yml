@@ -1,0 +1,112 @@
+---
+# TODO: 
+#     regexp: '^\/\/[\s]*{{ item.From }}$' pas fonctionnelle
+# ^.*email_host\s*=.*$
+
+
+- name: update all packages
+  apt:
+    name: "*"
+    state: latest
+    update_cache: yes
+
+- name: Installation packages for Debian
+  apt:
+    name:
+      - apt-transport-https
+      - ca-certificates
+      - curl
+      - emacs-nox
+      - git
+      - htop
+      - iptables-persistent
+      - lsb-release
+      - mlocate
+      - software-properties-common
+      - sudo
+      - rsyslog
+      - tcpdump
+      - dmidecode
+      - hwdata
+      - ucf
+      - hdparm
+      - perl 
+      - libuniversal-require-perl 
+      - libwww-perl 
+      - libparse-edid-perl
+      - libproc-daemon-perl 
+      - libfile-which-perl 
+      - libhttp-daemon-perl
+      - libxml-treepp-perl 
+      - libyaml-perl 
+      - libnet-cups-perl 
+      - libnet-ip-perl
+      - libdigest-sha-perl
+      - libsocket-getaddrinfo-perl
+      - libtext-template-perl
+      - libxml-xpath-perl
+      - libyaml-tiny-perl
+    state: present
+  ignore_errors: true
+
+################################ IPTABLES##########################################
+- name: start & enable iptables
+  systemd:
+      state: started
+      name: netfilter-persistent 
+      enabled: yes
+  when: ansible_distribution_major_version >= "7"
+
+################################# AUTOMATIC UPDATE ####################################
+- name: Variable automatic-update package on DEBIAN >= 8
+  set_fact:
+    automatic_update_package_name: unattended-upgrades
+    path_automatic_update_config: "/etc/apt/apt.conf.d/50unattended-upgrades"
+    automatic_update_service: "unattended-upgrades"
+  # when: ansible_os_family == "Debian" and ansible_lsb.major_release|int >= 8
+  
+
+
+- name: Installion unattended-upgrades package Debian
+  apt:
+    name: "{{ automatic_update_package_name}}"
+    state: present
+
+
+
+
+- name: Replace multiple lines and entries Debian     #################### trouver la bonne regex pour supprimer les commenttaires dans le fichier de conf 
+  replace:
+    path: "{{ path_automatic_update_config }}"
+    regexp: '^\/\/[\s]*{{ item.From }}$'
+    replace: '{{ item.To }}'
+  with_items:
+    - { From: "origin=Debian,codename=${distro_codename}-updates",               To: "origin=Debian,codename=${distro_codename}-updates"}
+    - { From: "origin=Debian,codename=${distro_codename}-proposed-updates",      To: "origin=Debian,codename=${distro_codename}-updates"}
+    - { From: "origin=Debian,codename=${distro_codename},label=Debian",          To: "origin=Debian,codename=${distro_codename},label=Debian"}
+    - { From: "origin=Debian,codename=${distro_codename},label=Debian-Security", To: "origin=Debian,codename=${distro_codename},label=Debian-Security"}
+  
+
+- name: Start and enable automatic-update service
+  service:
+    name: "{{automatic_update_service}}"
+    state: restarted
+    enabled: yes
+
+- name: Start and enable rsyslog for R8
+  service:
+    name: rsyslog
+    state: started
+    enabled: yes
+
+######################### POSTFIX ################################
+- name: Force postfix ipv4 Debian
+  blockinfile:
+      block: |
+              disable_ipv6='true'
+      path: /etc/exim4/update-exim4.conf.conf
+      state: present
+  ignore_errors: true
+
+
+

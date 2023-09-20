@@ -1,0 +1,136 @@
+---
+# https://access.redhat.com/solutions/10185
+
+- name: Print some debug information 
+  vars: 
+    msg: |
+        Mysql User: "{{ MYSQL_USER }}"
+        Mysql Password: "{{ MYSQL_PASSWORD }}"
+        Ansible Dist version: "{{ ansible_distribution_version }}"
+        Ansible Dist family: "{{ ansible_os_family }}"
+        Setup var: "{{ setup }}"
+  debug: 
+    msg: "{{ msg.split('\n') }}"
+  tags: debug_info
+
+- name: Set default zabbix configuration file path
+  set_fact:
+    path_iptables_config: "/etc/sysconfig/iptables"
+    path_zabbix_config: "/etc/zabbix/zabbix_server.conf"
+    zabbix_url_rpm: "https://repo.zabbix.com/zabbix/6.2/rhel/9/x86_64/zabbix-release-6.2-3.el9.noarch.rpm"
+    zabbix_mysql_user: "zabbix"
+    zabbix_mysql_password: "zabbix992@9d" 
+    
+
+- name: Import a key from a url for zabbix server
+  rpm_key:
+    state: present
+    key: "https://repo.zabbix.com/RPM-GPG-KEY-ZABBIX"
+
+- name: Install zabbix-server package from rpm
+  yum:
+    name: "{{ zabbix_url_rpm }}"
+    state: present
+    disable_gpg_check: true
+
+
+- name: Install epel-release
+  yum:
+    name: epel-release
+
+- name: Install let's encrypt Rocky 8 or major version
+  yum:
+    name:
+      - certbot
+      - python3-certbot-nginx
+    state: present
+
+- name: Exclude packages from EPEL repository
+  lineinfile:
+    path: /etc/yum.repos.d/epel.repo
+    regexp: '^\[epel\]'
+    insertafter: '^\[epel\]'
+    line: "excludepkgs=zabbix*"
+
+- name: Clear yum cache # The command is not integrate in the yum modul
+  command: yum clean all
+
+- name: Installion zabbix-server extra packages 
+  package: 
+    state: present
+    update_cache: true
+    name:
+      - zabbix-server-mysql
+      - zabbix-web-mysql 
+      - zabbix-nginx-conf
+      - zabbix-sql-scripts
+      - zabbix-selinux-policy
+
+- name: Replace multiple lines and entries
+  replace:
+    path: "{{ path_zabbix_config }}"
+    regexp: '^[\s|#]*{{ item.From }}\s*=.*$'
+    replace: '{{ item.To }}'
+  with_items:
+    - { From: "DBPassword", To: "DBPassword={{ zabbix_mysql_password }}"}
+
+################## MYSQL #############################
+- name: Import zabbix.sql 
+  mysql_db:
+    login_user: "{{ MYSQL_USER }}"
+    login_password: "{{ MYSQL_PASSWORD }}"
+    login_host: '{{ MYSQL_HOST }}'
+    collation: "utf8mb4_bin"
+    state: import
+    name: zabbix
+    target: /usr/share/zabbix-sql-scripts/mysql/server.sql.gz
+  ignore_errors: True
+
+- name: Create user zabbix on mysql DB
+  community.mysql.mysql_user:
+    login_user: "{{ MYSQL_USER }}"
+    login_password: "{{ MYSQL_PASSWORD }}"
+    login_host: '{{ MYSQL_HOST }}'
+    state: present
+    name: zabbix
+    password: "{{ zabbix_mysql_password }}"
+    priv:
+      'zabbix.*': 'ALL,GRANT'
+#######################################
+
+
+- name: Ansible Insert rules zabbix-agent in iptables
+  blockinfile:
+    path: "{{ path_iptables_config }}"
+    block: |
+      -A INPUT -p tcp  -m multiport --dports 80,443  -j ACCEPT
+    insertbefore: -A INPUT -j REJECT --reject-with icmp-host-prohibited
+
+- name: Enable service zabbix-server
+  service:
+    name: zabbix-server
+    enabled: yes
+
+- name: Restart service zabbix-server
+  service:
+    name: zabbix-server
+    state: restarted
+  when: setup is defined
+
+
+############################### RESTART SERVICE ###########################
+
+- name: Restart service nginx 
+  service:
+    name: nginx
+    enabled: yes
+    state: restarted
+  when: setup is defined
+
+- name: Restart service iptables
+  service:
+    name: iptables
+    enabled: yes
+    state: reloaded
+  when: setup is defined
+

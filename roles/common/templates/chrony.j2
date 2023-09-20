@@ -1,0 +1,6 @@
+{{ ansible_managed | comment }}
+
+# Use public servers from the pool.ntp.org project.
+{% for item in ntp_servers %}
+pool {{ item }} iburst
+{% endfor %}

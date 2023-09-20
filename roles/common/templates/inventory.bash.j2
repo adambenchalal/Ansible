@@ -1,0 +1,335 @@
+#!/bin/bash
+
+
+
+#On déclare les variables pour les vérifier les distrib plus tard
+
+testCentOS=`cat /etc/*-release | grep CentOS`
+
+testDeb=`cat /etc/*-release | grep Debian`
+
+##############DATE##############
+
+#La date du dernier inventaire
+
+Date=`date +%F`
+
+################################
+
+############Localisation########
+
+Loc=/root/location
+
+if [ -e "$Loc" ]
+
+then
+
+        Location=`cat /root/location`
+
+else
+
+        Location="NA"
+
+fi
+
+################################
+
+###############IP###############
+
+#On récupère la ou les addresses ipaddress
+
+IP=`ip a | grep "inet \|link/ether" | tr -s ' ' ';'`
+
+NRip=`awk 'END {print NR}' <<< "$IP"`
+
+i=2;
+
+while [ $i -lt "$NRip" ]; do
+
+
+
+        TestInet=`awk -v i="$i" -F\; 'NR == i {print $2}' <<< "$IP"`
+
+        if [ "$TestInet" == "inet" ]
+
+        then
+
+                ((i++))
+
+                ((NRip++))
+
+        else
+
+                ((i++))
+
+                TestNext=`awk -v i="$i" -F\; 'NR == i {print $2}' <<< "$IP"`
+
+                if [ "$TestNext" == "inet" ]
+
+                then
+
+                        B=$(awk -v i="$i" -F\; 'NR == i {print $3}' <<< "$IP")
+
+                        if [ -z "$B" ]
+
+                        then
+
+                                break
+
+                        else
+
+                                CAT=./testip.txt
+
+                                if [ ! -e "$CAT" ]
+
+                                then
+
+                                        echo "$B;" >> ./testip.txt
+
+                                else
+
+                                        test=`sed 's@$@'"$B"';@' ./testip.txt`
+
+                                        echo $test > ./testip.txt
+
+                                fi
+
+                               ((i++))
+
+                               ((NRip++))
+
+                        fi
+
+                else
+
+                        test=`sed 's/$/....;/' ./testip.txt`
+
+                        echo $test > ./testip.txt
+
+                fi
+
+        fi
+
+done
+
+IPADDR=`cat ./testip.txt`
+
+rm -f ./testip.txt
+
+################################
+
+#####################MAC########################
+
+MAC2=`ip a | grep "inet \|link/ether" | tr -s ' ' ';'`
+
+NRmac=`awk 'END {print NR}' <<< "$MAC2"`
+
+i=2;
+
+while [ $i -lt "$NRmac" ]; do
+
+
+
+        TestInet=`awk -v i="$i" -F\; 'NR == i {print $2}' <<< "$MAC2"`
+
+        if [ "$TestInet" == "inet" ]
+
+        then
+
+            ((i++))
+
+                        ((NRmac++))
+
+        else
+
+            ((i++))
+
+                        TestNext=`awk -v i="$i" -F\; 'NR == i {print $2}' <<< "$MAC2"`
+
+                        if [ "$TestNext" == "inet" ]
+
+                        then
+
+                                ((i--))
+
+                                B=$(awk -v i="$i" -F\; 'NR == i {print $3}' <<< "$MAC2")
+
+                                if [ -z "$B" ]
+
+                                then
+
+                                        break
+
+                                else
+
+                                        CAT2=./testmac.txt
+
+                                        if [ ! -e "$CAT2" ]
+
+                                        then
+
+                                                echo "$B;" >> ./testmac.txt
+
+                                        else
+
+                                                test2=`sed 's@$@'"$B"';@' ./testmac.txt`
+
+                                                echo $test2 > ./testmac.txt
+
+                                        fi
+
+                                        ((i++))
+
+                                fi
+
+                        else
+
+                                test2=`sed 's/$/....;/' ./testmac.txt`
+
+                                echo $test2 > ./testmac.txt
+
+                        fi
+
+        fi
+
+done
+
+MAC=`cat ./testmac.txt`
+
+rm -f ./testmac.txt
+
+##############################################
+
+#############Model & Manufacturer#############
+
+manufacturer=`dmidecode | grep -A2 '^System Information' | tr -s ' ' ';' | awk -F\; 'NR == 2 {print $2}'`
+
+if [ -z "$manufacturer" ]
+
+then
+
+        manufacturer=`echo "Not found (VM)"`
+
+fi
+
+Manufacturer=`echo $manufacturer | tr -s ' ' ';'`
+
+model=`dmidecode | grep -A2 '^System Information' | tr -s ' ' ';' | awk -F\; 'NR == 3 { for(i=3 ; i <= NF ; i++) { printf "%s ",$i }}'`
+
+if [ -z "$model" ]
+
+then
+
+        model=`echo "Not found (VM)"`
+
+fi
+
+Model=`echo $model | tr -s ' ' ';'`
+
+##############################################
+
+##################GATEWAY#####################
+
+#On récupère la gateway par DEFAUT
+
+Gateway=`ip route | grep default | tr -s ' ' ';' | awk -F\; '{ print $3 }'`
+
+##############################################
+
+#####HOSTNAME#####
+
+Hostname=`hostname`
+
+##################
+
+#######RAM########
+
+RAMtot=`free -h | tr -s ' ' ';' | grep Mem | awk -F\; '{ print $2 }'`
+
+RAMfree=`free -h | tr -s ' ' ';' | grep Mem | awk -F\; '{ print $4 }'`
+
+##################
+
+##########INFO_CPU##########
+
+#La type de CPU
+
+cputype=`cat /proc/cpuinfo | grep "model name" | awk -F: 'NR == 1 {print $2}'`
+
+CPUtype=`echo $cputype | tr -s ' ' ';'`
+
+#Le nombre de coeurs CPU
+
+CPUcores=`nproc --all`
+
+#cpucores=`cat /proc/cpuinfo | grep "cpu cores" | awk -F: 'NR == 1 {print $2}'`
+
+#CPUcores=`echo $cpucores | tr -s ' ' ';'`
+
+#L'espace disque
+
+centos6=`cat /etc/*-release | tr -s ' ' ';' | awk -F\; 'NR==1{ print $1 $2 $3 $4 }' | grep "^CentOS.*release6.*"`
+
+if [ -z "$centos6" ]
+
+then
+
+        Disktot=`df -h | grep "^/dev" | grep "/$" | tr -s ' ' ';' | awk -F\; '{ print $2}'`
+
+        Diskfree=`df -h | grep "^/dev" | grep "/$" | tr -s ' ' ';' | awk -F\; '{ print $4}'`
+
+        Diskused=`df -h | grep "^/dev" | grep "/$" | tr -s ' ' ';' | awk -F\; '{ print $5}'`
+
+else
+
+        Disktot=`df -h | grep "/$" | tr -s ' ' ';' | awk -F\; '{ print $2}'`
+
+        Diskfree=`df -h | grep "/$" | tr -s ' ' ';' | awk -F\; '{ print $4}'`
+
+        Diskused=`df -h | grep "/$" | tr -s ' ' ';' | awk -F\; '{ print $5}'`
+
+fi
+
+############################
+
+#########On vérifie quelle est la distrib, pour ajuster certaines commandes############
+
+if [ -z "$testCentOS" ]
+
+then
+
+        ##############DEBIAN##############
+
+        # Version d'OS
+
+        cosrelease=`cat /etc/os-release | grep PRETTY_NAME | awk -F\" '{print $2}'`
+
+        COSrelease=`echo $cosrelease | tr -s ' ' ';'`
+
+        ##################################
+
+else
+
+        ###############CENTOS###############
+
+        #La version d'OS
+
+        cosrelease=`cat /etc/redhat-release`
+
+        COSrelease=`echo $cosrelease | tr -s ' ' ';'`
+
+        # ####################################
+
+fi
+
+
+
+cache="0"
+
+
+
+curl -v -d 'Lastinventory='$Date'&Hostname='$Hostname'&OS='$COSrelease'&Ramtot='$RAMtot'&Ramfree='$RAMfree'&Disktot='$Disktot'&Diskfree='$Diskfree'&Diskused='$Diskused'&Cput='$CPUtype'&Cpuc='$CPUcores'&Manu='$Manufacturer'&Model='$Model'&IP='$IPADDR'&Gateway='$Gateway'&Mac='$MAC'&Location='$Location'&cache='$cache'' http://192.168.250.222/traitement.php
+
+
+
+#####CRON A RAJOUTER#####

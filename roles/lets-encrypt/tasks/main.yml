@@ -1,0 +1,59 @@
+---
+# Compatible only for RockyLinux >=8
+
+- name: Set directory of  web site 
+  set_fact:
+    path_of_letsencrypt: /var/www/letsencrypt/
+    name_of_website: "zabbix-server.telemaque.fr"
+    path_iptables_config: "/etc/sysconfig/iptables"
+  when: ansible_os_family == "RedHat"
+
+
+
+- name: Ansible Insert rules zabbix-agent in iptables
+  blockinfile:
+    path: "{{ path_iptables_config }}"
+    block: |
+      -A INPUT -p tcp -m multiport --dports 80,443 -j ACCEPT
+    insertbefore: COMMIT
+
+
+- name: Install epel-release
+  yum:
+    name:
+      - epel-release 
+  when: (ansible_distribution == "Rocky" and ansible_distribution_major_version >= "8")
+
+- name: Install let's encrypt Rocky 8 or major version
+  yum:
+    name:
+      - certbot
+      - python3-certbot-nginx
+  when: (ansible_distribution == "Rocky" and ansible_distribution_major_version >= "8")
+
+- name: Create letsencrypt directory
+  file:
+    path: /var/www/letsencrypt/
+    state: directory
+    owner: nginx
+    mode: '0755'
+
+# - name: Request for ssl certificate 
+#   shell: certbot --non-interactive --agree-tos --nginx --no-eff-email -d zabbix-server.telemaque.fr --register-unsafely-without-email
+#   when: (ansible_distribution == "Rocky" and ansible_distribution_major_version >= "8")
+
+- name: Renew letsencrypt certificate
+  cron:
+    name: Renew letsencrypt certificate
+    minute: "0"
+    hour: "0"
+    month: "*"
+    job: "certbot renew --quiet"
+
+- name: Restart service nginx 
+  service:
+    name: nginx
+    enabled: yes
+    state: restarted
+  when: setup is defined
+

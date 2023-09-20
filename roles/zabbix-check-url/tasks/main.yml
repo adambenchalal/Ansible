@@ -1,0 +1,160 @@
+---
+#TODOOO: Trouver une autre façon d'injecter le fichier contenant les hosts
+
+- name: Include host list variables
+  include_vars:
+    file: Test.yml
+
+- name: Create Zabbix host website
+  zabbix_host:
+    server_url: "https://zabbix-servers.telemaque.fr"
+    login_user: Admin
+    login_password: IE*u8XYEImQy4vdpVn3oZ
+    host_name: "{{ item.hostname }}"
+    link_templates: Website certificate by Zabbix agent 2
+    host_groups:
+      - Websites
+    macros:
+      - { macro: '{$CERT.WEBSITE.HOSTNAME}', value: "{{ item.url }}" }
+    interfaces:
+      - { type: 1, main: 1, useip: 1, ip: '192.168.250.180', dns: '', port: '10050' }
+    state: present
+  with_items: "{{ websites_list }}"
+
+######################### Part creation of users ###############################################
+#Todoo : Faut-il générer un mot de passe fort directement ou mettre un mot de passe générique que les users changeront à la première connexion 
+#The variables are insert on group group_vars
+
+# - name: create a new zabbix user
+#   zabbix_user:
+#     server_url: https://zabbix-servers.telemaque.fr
+#     login_user: Admin
+#     login_password: IE*u8XYEImQy4vdpVn3oZ
+#     username: "{{ item.username }}"
+#     usrgrps:
+#       - Zabbix administrators
+#     passwd: "{{ item.password }}"
+#     lang: default
+#     theme: default
+#     autologin: no
+#     autologout: '0'
+#     refresh: '30'
+#     rows_per_page: '50'
+#     user_medias:
+#       - mediatype: Email
+#         sendto: "{{ item.usermail }}"
+#         period: 1-7,00:00-24:00
+#         severity:
+#           not_classified: no
+#           information: no
+#           warning: no
+#           average: no
+#           high: yes
+#           disaster: yes
+#         active: yes
+#     type: Zabbix super admin
+#     state: present
+#   with_items: "{{ zabbix_users }}"
+########################################################################
+############################### CREATE LIST OF IDRAC HOSTS ###################
+
+# - name: Include host list variables
+#   include_vars:
+#     file: host-idrac.yml
+
+# - name: Create Zabbix Idrac Interface host
+#   zabbix_host:
+#     server_url: "https://zabbix-servers.telemaque.fr"
+#     login_user: Admin
+#     login_password: IE*u8XYEImQy4vdpVn3oZ
+#     host_name: "{{ item.hostname }}"
+#     link_templates: Dell iDRAC by SNMP
+#     host_groups:
+#       - Idrac
+#     interfaces:
+#       - type: 2
+#         main: 1
+#         useip: 1
+#         ip: '{{ item.ip }}'
+#         dns: ''
+#         port: '161'
+#         details:
+#           version : "2"
+#           bulk: "1"
+#           community: 'public'
+#     state: present
+#   with_items: "{{ zabbix_host_idrac }}"
+
+#####################################################################
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+##################### Method clean ###########################
+# - name: get list of existant hosts from zabbix server
+#   zabbix_inventory:
+#      server_url: https://zabbix-server.telemaque.fr
+#      login_user: Admin
+#      login_password: mfkH0!0T31jxcSKxn*zb11
+
+
+# - name: Get list of all existant hôtes 
+#   zabbix_host_info:
+#     server_url: https://zabbix-server.telemaque.fr
+#     login_user: Admin
+#     login_password: mfkH0!0T31jxcSKxn*zb11
+#     host_name: "jenkins.tlmq.fr"
+#   register: existing_hosts
+
+# - name: Read list of host file
+#   slurp:
+#     src: "/root/ansible-v2/roles/zabbix-check-url/files/check-url.txt"
+#   register: desired_hosts_file
+
+# - name: Create a liste of object 
+#   group:
+#     name: "{{ item }}"
+#   with_items: "{{ desired_hosts_file }}"
+
+# - debug:
+#     msg: "{{ existing_hosts }}"
+
+
+############################################################################
+# - name: Read the file
+#   shell: cat file.txt
+#   register: desired_hosts_file
+
+# - name: Convertir la liste des hôtes désirés en une liste d'objets
+#   set_fact:
+#     desired_hosts: "{{ desired_hosts_file.content | from_json }}"
+###########################################################################
+
+# - name: Supprimer les hôtes qui ne sont pas dans le fichier
+#   zabbix_host:
+#     server_url: https://zabbix-server.telemaque.fr
+#     login_user: Admin
+#     login_password: mfkH0!0T31jxcSKxn*zb11
+#     host_name: "{{ item }}"
+#     state: absent
+#   loop: "{{ existing_hosts.results | difference(desired_hosts_file) }}"
+
+
+

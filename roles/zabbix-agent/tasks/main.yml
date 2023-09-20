@@ -1,0 +1,65 @@
+---
+
+- name: Set zabbix configuration file path
+  set_fact:
+    path_zabbix_config: "/etc/zabbix_agentd.conf"
+    path_iptables_config: "/etc/sysconfig/iptables"
+  when: ansible_os_family == "RedHat"
+
+- name: Set zabbix configuration file path
+  set_fact:
+    path_zabbix_config: "/etc/zabbix/zabbix_agentd.conf"
+    path_iptables_config: "/etc/iptables/rules.v4"
+  when: ansible_os_family == "Debian"
+
+
+- name: Install zabbix-agent2 Debian package from the internet Debian 9
+  apt:
+    deb: https://repo.zabbix.com/zabbix/6.2/debian/pool/main/z/zabbix-release/zabbix-release_6.2-4%2Bdebian9_all.deb
+  when: (ansible_facts['distribution'] == "Debian" and ansible_facts['distribution_major_version'] == "9")
+
+
+- name: Installion zabbix-agent package 
+  package: 
+    state: present
+    update_cache: true
+    name:
+      - zabbix-agent
+
+
+- name: Replace multiple lines and entries
+  replace:
+    path: "{{ path_zabbix_config }}"
+    regexp: '^[\s]*{{ item.From }}\s*=.*$'
+    replace: '{{ item.To }}'
+  with_items:
+    - { From: "Server", To: "Server={{ zabbix.internal_ip }}"}
+    - { From: "Hostname", To: "Hostname={{ ansible_hostname }}"}
+
+
+- name: Enable service zabbix-agent
+  service:
+    name: zabbix-agent
+    enabled: yes
+
+
+- name: Restart service zabbix-agent 
+  service:
+    name: zabbix-agent
+    state: restarted
+  when: setup is defined
+
+
+- name: Ansible Insert rules zabbix-agent in iptables
+  blockinfile:
+    path: "{{ path_iptables_config }}"
+    block: |
+      -A INPUT -p tcp --dport {{zabbix.port}} -s {{zabbix.internal_ip}} -m conntrack --ctstate NEW,ESTABLISHED -j ACCEPT
+    insertbefore: COMMIT
+
+
+- name: restart iptables
+  service:
+    name: iptables
+    state: restarted
+  when: setup is defined

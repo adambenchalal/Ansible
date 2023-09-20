@@ -1,0 +1,42 @@
+---
+
+- name: Set default zabbix configuration file path
+  set_fact:
+    MYSQL_USER: "root"
+    MYSQL_PASSWORD: "{{ lookup('ansible.builtin.password', '/tmp/passwordfile length=16') }}"
+    MYSQL_HOST: "127.0.0.1"
+  when: setup is defined
+
+- name: Installion MySQL Server
+  package: 
+    state: present
+    update_cache: true
+    name:
+      - mysql-server
+      - python3-PyMySQL
+
+- name: start and enable MySQL service
+  service:
+    name: mysqld
+    state: started
+    enabled: yes
+
+- name: 5 second pause for MySQL starting
+  pause:
+    seconds: 5
+
+- name: Creating root user MySQL
+  mysql_user:
+    name: "{{ MYSQL_USER }}"
+    password: "{{ MYSQL_PASSWORD }}"
+    host: "{{ item }}"
+    priv: '*.*:ALL,GRANT'
+    state: present
+  with_items:
+    - 127.0.0.1
+    # - ::1
+    - localhost
+  ignore_errors: True
+
+- name: Add .my.cnf file 
+  template: src=.my.cnf.j2 dest=/root/.my.cnf mode=0600 owner=root group=root

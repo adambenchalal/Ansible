@@ -1,0 +1,91 @@
+---
+#Installation FUSION INVENTORY AGENT Multi OS
+
+###################### DEBIAN 9 ###############################
+- name: Install package fusioninventory-agent Debian 9 >=
+  ansible.builtin.apt:
+    deb: https://github.com/fusioninventory/fusioninventory-agent/releases/download/2.5.2/fusioninventory-agent_2.5.2-1_all.deb
+  when: ansible_os_family == "Debian" and ansible_lsb.major_release|int >= 9
+
+#Party Centos7 & Debian 8
+######################### SETTING VARIABLES ########################
+- name: Set fusioninventory-agent configuration file path
+  set_fact:
+    path_fusionagent_config: "/etc/fusioninventory/agent.cfg"
+  when: ansible_os_family == "Debian" or ansible_distribution in ["CentOS", 'Rocky'] and ansible_distribution_major_version == "8"
+
+
+- name: Set iptables configuration file path
+  set_fact:
+    path_iptables_config: "/etc/sysconfig/iptables"
+  when: ansible_os_family == "RedHat"
+
+
+- name: Set iptables configuration file path
+  set_fact:
+    path_iptables_config: "/etc/iptables/rules.v4"
+  when: ansible_distribution == "Debian"
+###################################################################
+
+
+- name: Enable repo PowerTools 
+  command: yum config-manager --set-enabled powertools
+  when: ansible_distribution in ["CentOS", 'Rocky'] and ansible_distribution_major_version == "8"
+
+
+- name: Installion fusioninventory-agent package 
+  package: 
+    state: present
+    update_cache: true
+    name:
+      - fusioninventory-agent
+  when: ansible_distribution in ["CentOS", 'Rocky'] and ansible_distribution_major_version == "8" or
+        (ansible_facts['distribution'] == "Debian" and ansible_facts['distribution_major_version'] == "8")
+
+
+- name: Modification of fusion inventory file config
+  blockinfile:
+    path: "{{path_fusionagent_config}}"
+    block: |
+      {{ fusioninventory.url }}
+      {{ fusioninventory.log }}
+    insertbefore: delaytime = 3600      # ---> Todoo à tester avec valeur ou sans 
+  when: ansible_distribution == "Debian" or ansible_distribution in ["CentOS", 'Rocky'] and ansible_distribution_major_version == "8"
+
+
+- name: Enable service fusioninventory-agent
+  service:
+    name: fusioninventory-agent
+    state: restarted
+    enabled: yes
+  when: setup is defined
+  ignore_errors: true
+
+# Configuration rules in IPTABLES for Debian 
+- name: Ansible Insert multiple lines using blockinfile for Debian
+  blockinfile:
+    path: "{{ path_iptables_config }}"
+    block: |
+      -A INPUT -p tcp --dport {{fusioninventory.port}} -s {{fusioninventory.ip}} -m conntrack --ctstate NEW,ESTABLISHED -j ACCEPT
+    insertbefore: COMMIT
+
+ # Activation of the service at the start of your machine automatically for RedHat & Debian
+- name: restart iptables
+  service:
+    name: iptables
+    state: restarted
+  when: setup is defined
+  ignore_errors: true
+
+
+# TODOO : Find a way for add powertools repo / change command part 
+### example :
+# - name: Add powertools repo
+#   yum_repository:
+#     name: powertools
+#     description: CentOS Stream - PowerTools
+#     mirrorlist: http://mirrorlist.centos.org/?release=$stream&arch=$basearch&repo=PowerTools&infra=$infra
+#     gpgcheck: true
+#     enabled: yes
+#     gpgkey: file:///etc/pki/rpm-gpg/RPM-GPG-KEY-centosofficial
+

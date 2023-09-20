@@ -1,0 +1,95 @@
+---
+
+- name: Set usernames
+  set_fact:
+    folders:
+      - foldersname: opcache
+      - foldersname: session
+      - foldersname: wsdlcache
+      - foldersname: peclxml
+
+
+- name: Installation php packages for Redhat
+  yum:
+    name: 
+      - php 
+      - php-cli
+      - php-gd
+      - php-curl
+      - php-zip
+      - php-mbstring
+      - php-opcache 
+      - php-fpm
+      - php-common
+      - php-xml
+      - php-json
+      - php-posix
+      - php-intl
+      - php-bcmath
+      - php-mysqlnd
+    state: present
+
+- name: Replace user & group in /etc/php-fpm.d/www.conf
+  replace:
+    path: "/etc/php-fpm.d/www.conf"
+    regexp: '^[\s]*{{ item.From }}\s*=.*$'
+    replace: '{{ item.To }}'
+  with_items:
+    - { From: "user", To: "user=nginx"}
+    - { From: "group", To: "group=nginx"}
+
+- name: Replace user & group in /etc/php-fpm.d/10-opcache.ini
+  replace:
+    path: "/etc/php.d/10-opcache.ini"
+    regexp: '^[\s]*{{ item.From }}\s*=.*$'
+    replace: '{{ item.To }}'
+  with_items:
+    - { From: "zend_extension", To: "zend_extension=opcache.so"}
+
+###### PHP COMPOSER PART ########
+
+- name: Download the Composer installer script
+  shell: php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+
+- name: install Composer in the /usr/local/bin directory
+  shell: php composer-setup.php --install-dir=/usr/local/bin --filename=composer
+
+- name: Install epel-release & tools
+  yum:
+    name:
+      - epel-release
+      - xe-guest-utilities-latest
+      - htop
+
+- name: Install php remi Redhat package from the internet
+  yum:
+    name: https://rpms.remirepo.net/enterprise/remi-release-8.rpm
+    state: present
+    disable_gpg_check: true
+    validate_certs: no
+
+- name: reset php module
+  shell: dnf module reset -y php
+
+
+- name: enable php remi-7.2
+  shell: dnf module enable php:remi-7.2 -y && dnf module install php:remi-7.2 -y
+
+- name: Install php-imap
+  yum:
+    name: php-imap
+    state: present
+
+
+- name: Change file ownership /var/lib/php/
+  file:
+    path: "/var/lib/php/{{ item.foldersname }}"
+    owner: nginx
+    group: nginx
+  with_items: "{{ folders }}"
+
+- name: start and enable php 7.2 service
+  service:
+    name: php-fpm
+    state: started
+    enabled: yes

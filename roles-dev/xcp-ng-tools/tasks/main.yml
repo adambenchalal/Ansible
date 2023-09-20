@@ -1,0 +1,27 @@
+---
+
+
+
+- name: Installion xcp-ng tools package 
+  package: 
+    state: present
+    update_cache: true
+    name:
+      - xe-guest-utilities-latest
+  when: ansible_distribution in ["CentOS", 'Rocky'] and ansible_distribution_major_version >= "7"
+
+
+- name: Enable service nginx
+  service:
+    name: xe-linux-distribution
+    enabled: yes
+  when: ansible_distribution in ["CentOS", 'Rocky'] and ansible_distribution_major_version >= "7"
+
+- name: Restart service nginx 
+  service:
+    name: xe-linux-distribution
+    state: restarted
+  when: setup is defined
+  
+
+

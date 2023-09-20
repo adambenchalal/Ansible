@@ -1,0 +1,28 @@
+---
+
+- name: Installation packages for Redhat
+  yum:
+    name: 
+      - php 
+      - php-cli
+      - php-gd
+      - php-curl
+      - php-zip
+      - php-mbstring
+      - php-opcache 
+      - php-fpm
+      - php-common
+      - php-xml
+      - php-json
+      - php-posix
+      - php-intl
+      - php72-php-imap
+      - php72-php-pdo
+      - php-mysqlnd
+    state: present
+
+- name: start and enable php 7.2 service
+  service:
+    name: php-fpm
+    state: started
+    enabled: yes

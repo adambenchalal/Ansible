@@ -1,0 +1,9 @@
+---
+
+- name: Copy local prompt file to remote server
+  copy:
+    src: "custom.sh"
+    dest: /etc/profile.d/custom.sh
+    mode: 0644
+
+
