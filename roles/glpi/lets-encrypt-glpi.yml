@@ -1,0 +1,51 @@
+---
+
+
+
+
+# - name: Install let's encrypt Rocky 8 or major version
+#   yum:
+#     name:
+#       - certbot
+#       - python3-certbot-nginx
+#   when: (ansible_distribution == "Rocky" and ansible_distribution_major_version >= "8")
+
+
+- name: Create letsencrypt directory
+  file:
+    path: /var/www/letsencrypt/
+    state: directory
+    owner: nginx
+    mode: '0755'
+
+- name: stop service nginx 
+  service:
+    name: nginx
+    state: stopped
+  when: setup is defined
+
+- name: Demande de certificat ssl
+  shell: certbot certonly --standalone --non-interactive --agree-tos --no-eff-email -d {{ zabbix.url }} --register-unsafely-without-email
+  when: (ansible_distribution == "Rocky" and ansible_distribution_major_version >= "8")
+
+
+- name: Renew letsencrypt certificate
+  cron:
+    name: Renew letsencrypt certificate
+    minute: "0"
+    hour: "0"
+    month: "*"
+    job: "certbot renew --quiet && systemctl reload nginx"
+
+- name: Insert content of zabbix-conf template
+  template:
+    src: zabbix.conf.j2
+    dest: /etc/nginx/conf.d/zabbix.conf
+
+- name: Restart service nginx 
+  service:
+    name: nginx
+    enabled: yes
+    state: restarted
+  when: setup is defined
+
