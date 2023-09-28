@@ -1,7 +1,11 @@
 ---
 
+
+- include_tasks: "nginx.yml"
+- include_tasks: "php-8.2.yml"
 - include_tasks: "glpi-server.yml"
 - include_tasks: "/root/ansible-v2/roles/common/tasks/ipv6-disable.yml"
 - include_tasks: "lets-encrypt-glpi.yml"
+
 
 
