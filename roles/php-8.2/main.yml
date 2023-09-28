@@ -1,0 +1,25 @@
+---
+
+- name: Installation packages for Redhat
+  yum:
+    name: '{{ item }}'
+    state: present
+    disable_gpg_check: true
+  with_items:
+    - "http://rpms.remirepo.net/enterprise/remi-release-9.rpm"
+    - epel-release
+    - yum-utils
+  ignore_errors: true
+
+- name: Install remi package from rpm
+  yum:
+    name: "http://rpms.remirepo.net/enterprise/remi-release-9.rpm"
+    state: present
+    disable_gpg_check: true
+
+
+- name: start and enable php 8.2 service
+  service:
+    name: php-fpm
+    state: started
+    enabled: yes
