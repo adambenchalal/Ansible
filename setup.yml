@@ -37,7 +37,7 @@
   roles:
     - nginx
     - php-8.2
-    - glpi-server
+    - glpi
   vars:
     setup: true
 #############################
