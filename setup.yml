@@ -30,6 +30,16 @@
   vars:
     setup: true
 
+- name: Deployment Glpi
+  hosts: GLPI
+  become: yes
+  become_method: sudo
+  roles:
+    - nginx
+    - php-8.2
+    - glpi-server
+  vars:
+    setup: true
 #############################
 ##### EXTRA MODULE LIST #####
 #############################
