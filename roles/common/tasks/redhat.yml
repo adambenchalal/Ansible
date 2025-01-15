@@ -45,6 +45,7 @@
     - yum-utils
     - htop
     - mtr
+    - nano
     - vim
     - dmidecode
     - xe-guest-utilities-latest
@@ -163,13 +164,6 @@
   selinux:
     state: disabled
 
-###############  XCP-NG VM TOOLS ############################
 
-- name: Enable/Restart automatic-update service
-  service:
-    name: "xe-linux-distribution"
-    state: started
-    enabled: yes
-  ignore_errors: true
-  
+
 

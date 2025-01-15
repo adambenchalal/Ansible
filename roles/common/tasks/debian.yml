@@ -78,7 +78,7 @@
 - name: Replace multiple lines and entries Debian     #################### trouver la bonne regex pour supprimer les commenttaires dans le fichier de conf 
   replace:
     path: "{{ path_automatic_update_config }}"
-    regexp: '^\/\/[\s]*{{ item.From }}$'
+    regexp: '^\s*\/\/\s*{{ item.From }}\s*$'
     replace: '{{ item.To }}'
   with_items:
     - { From: "origin=Debian,codename=${distro_codename}-updates",               To: "origin=Debian,codename=${distro_codename}-updates"}

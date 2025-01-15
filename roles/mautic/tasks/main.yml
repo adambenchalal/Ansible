@@ -1,6 +1,0 @@
----
-
-- include_tasks: "nginx-mautic.yml"
-- include_tasks: "php-7.2.yml"
-- include_tasks: "mautic.yml"
-- include_tasks: "lets-encrypt-mautic.yml"

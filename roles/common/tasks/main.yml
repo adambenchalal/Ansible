@@ -17,7 +17,5 @@
 
 - include_tasks: "system.yml"
 - include_tasks: "prompt.yml"
-- include_tasks: "ipv6-disable.yml"
-- include_tasks: "ssh-users.yml"
 - include_tasks: "set-hostname.yml"
-# - include_tasks: "fusioninventory-agent.yml"
+

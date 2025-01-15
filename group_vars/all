@@ -1,17 +1,17 @@
 ---
 
 timezone: "Europe/Paris"
-domain: telemaque.fr
+domain: 
 
 dns_servers:
    primary: 91.209.191.1
    secondary: 212.342.169.1
 
 zabbix:
-   internal_ip: 192.168.250.180
-   external_ip: 212.234.169.188
+   internal_ip: 192.168.
+   external_ip: 
    port: 10050
-   url: "zabbix-servers.telemaque.fr"
+   url: ""
 
 ntp_servers:
    - "0.rhel.pool.ntp.org"
@@ -20,9 +20,9 @@ ntp_servers:
    - "3.rhel.pool.ntp.org"
 
 fusioninventory:
-   ip: 192.168.250.220
+   ip: 192.168.
    port: 62354
-   url: server = http://192.168.250.220/plugins/fusioninventory/
+   url: server = http://192.168./plugins/fusioninventory/
    log: logfile = /var/log/fusioninventory.log
 
 apache:
@@ -30,33 +30,13 @@ apache:
    port_443: 443
 
 smtp:
-   server: smtp.telemaque.fr
-#   password: vCkKZbIiT!8nJPFoqbb*mQ # usefull ?
+   server: 
 
 zabbix_users:
    - username: a.benchalal
-     usermail: a.benchalal@telemaque.fr
+     usermail: a.benchalal@.fr
      password: UvaohqdoqT55vjQRmQKkt0
-   - username: alex
-     usermail: alex@telemaque.fr
-     password: oghwLebQYSZA0a9lrtro1
-   - username: f.leroy
-     usermail: fl@telemaque.fr
-     password: COF01QrKZ8i16805xcgBU5JD
-   - username: h.ouni
-     usermail: ounihassen@tanis-tunisie.com
-     password: EQ6M7eAvXeMipV9K9sB
-   - username: eric
-     usermail: e.boccadoro@telemaque.fr
-     password: pRCmAl7oOksTMfmsyoF9r
+   
 
-#######################################################
-#####  A definir en fonction de la machine voulu  #####
-#####  mautic fr l'url sera : m.esmeralda.chat    #####
-#####  mautic anglo l'url sera : e.esmeralda.chat #####
-#######################################################
 
-mautic:
-   url: " a definir en fonction de la machine"
-   host: " a definir en fonction de la machine"
    

@@ -20,16 +20,6 @@
   vars:
     setup: true
 
-- name: Deployment Mautic
-  hosts: template-rocky-8
-  become: yes
-  become_method: sudo
-  roles:
-    - mysql-5.7
-    - mautic
-  vars:
-    setup: true
-
 - name: Deployment Glpi
   hosts: GLPI
   become: yes
@@ -40,6 +30,7 @@
     - glpi
   vars:
     setup: true
+    
 #############################
 ##### EXTRA MODULE LIST #####
 #############################

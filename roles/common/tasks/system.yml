@@ -44,14 +44,3 @@
     path: /etc/ssh/sshd_config
     line: "PasswordAuthentication no"
   when: check.found == 0
-
-- name: Enable/Restart iptables
-  service:
-    state: restarted
-    name: sshd
-
-- name: Enable/Restart iptables
-  service:
-    state: restarted
-    enabled: yes
-    name: sshd
